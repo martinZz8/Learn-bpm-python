@@ -33,6 +33,16 @@ class Net:
     # def backProp(self, target_vals):
 
     def getResults(self):
+        file = open("Results.txt", "a")
+
         for i in range(len(self.__m_layers[-1])):
-            print("%.5f" % self.__m_layers[-1][i].getOutputValue(), end=", ")
+            output_value = self.__m_layers[-1][i].getOutputValue()
+            if i != (len(self.__m_layers[-1]) - 1):
+                print("%.5f" % output_value, end=", ")
+                file.write("%.5f, " % output_value)
+            else:
+                print("%.5f" % output_value)
+                file.write("%.5f" % output_value)
         print()
+        file.write("\n\n")
+        file.close()
