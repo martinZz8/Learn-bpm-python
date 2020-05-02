@@ -18,16 +18,16 @@ def main():
     x_test = scaler.fit_transform(x_test)
 
     epoch = 1
+    topology = [len(x_train[0]), len(x_train[0]), len(x_train[0]), len(y_train[0])]
+    my_net = Net(topology)
 
     for e in range(epoch):
         for r in range(len(x_train)):
             input_vals = x_train[r]
             target_vals = y_train[r]
-            topology = [len(x_train[r]), len(x_train[r]), len(x_train[r]), len(y_train[r])]
-            my_net = Net(topology)
             my_net.feedForward(input_vals)
             #my_net.backProp(target_vals)
-            print("Data set: {}".format(r))
+            print("Data row: {}".format(r))
             my_net.getResults()
 
     print()
