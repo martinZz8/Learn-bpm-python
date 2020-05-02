@@ -3,7 +3,7 @@ from Neuron import Neuron
 
 class Net:
     def __init__(self, topology):
-        self.__m_layers = [[]]
+        self.__m_layers = []
         num_layers = len(topology)
         # Utworzenie warstw i neuronow
         for layer_num in range(num_layers):
@@ -11,7 +11,7 @@ class Net:
             num_outputs = 0
             if layer_num != (num_layers - 1):
                 num_outputs = topology[layer_num + 1]
-            for neuron_num in range(len(topology[layer_num]) + 1):
+            for neuron_num in range(topology[layer_num] + 1):
                 self.__m_layers[layer_num].append(Neuron(num_outputs, neuron_num))
             # Dodanie biasu do ostatnie neuronu kazdej warstwy
             self.__m_layers[-1][-1].setOutputValue(1.0)
@@ -32,4 +32,7 @@ class Net:
 
     # def backProp(self, target_vals):
 
-    # def getResults(self, result_vals):
+    def getResults(self):
+        for i in range(len(self.__m_layers[-1])):
+            print("%.5f" % self.__m_layers[-1][i].getOutputValue(), end=", ")
+        print()

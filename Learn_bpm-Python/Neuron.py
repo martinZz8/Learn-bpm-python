@@ -39,5 +39,5 @@ class Neuron:
     def feedForward(self, prev_layer):
         summ = 0.0
         for n in range(len(prev_layer)):
-            summ += prev_layer[n].getOutputVal() * prev_layer[n].m_outputWeights[self.__m_my_index].weight
+            summ += prev_layer[n].getOutputValue() * prev_layer[n].__m_output_weights[self.__m_my_index].weight
         self.__m_output_value = self.transferFunction(summ)
