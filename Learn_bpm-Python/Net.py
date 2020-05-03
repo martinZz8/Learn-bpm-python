@@ -1,5 +1,6 @@
 from Neuron import Neuron
-import math
+from numpy import sqrt
+
 
 class Net:
     def __init__(self, topology):
@@ -39,9 +40,9 @@ class Net:
         self.__m_error = 0.0
         for n in range(len(output_layer) - 1):
             delta = target_values[n] - output_layer[n].getOutputValue()
-            self.__m_error += math.pow(delta, 2)
+            self.__m_error += delta**2
         self.__m_error /= (len(output_layer) - 1)
-        self.__m_error = math.sqrt(self.__m_error) # RMS
+        self.__m_error = sqrt(self.__m_error)  # RMS
 
         # Implementacja ostatniej sredniej z pomiarow
         self.__m_recent_average_error = (self.__m_recent_average_error * self.__m_recent_average_smoothing_factor + self.__m_error) / (self.__m_recent_average_smoothing_factor + 1)
