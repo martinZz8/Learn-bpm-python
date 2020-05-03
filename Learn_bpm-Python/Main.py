@@ -8,10 +8,28 @@ from sklearn.preprocessing import StandardScaler
 from Net import Net
 
 
-def saveToFile(message):
-    file = open("Results.txt", "a")
-    file.write(message)
+def saveEpochToFile(file_name, epoch):
+    file = open(file_name, "a")
+    file.write("Epoch: {}\n\n-\t-\t-\t-\t-\t-\n\n".format(epoch))
     file.close()
+
+
+def saveResultsToFile(file_name, row, result_values, target_values):
+    file = open(file_name, "a")
+    file.write("\nData row: {}\n\nOutput:   ".format(row))
+    for i in range(len(result_values)):
+        if i != (len(result_values) - 1):
+            file.write("%.5f, " % result_values[i])
+        else:
+            file.write("%.5f\n" % result_values[i])
+    file.write("Expected: ")
+    for i in range(len(target_values)):
+        if i != (len(target_values) - 1):
+            file.write("%.5f, " % target_values[i])
+        else:
+            file.write("%.5f\n" % target_values[i])
+    file.close()
+
 
 def main():
     dataset = pd.read_csv("winequality-red.csv", sep=';', decimal=",", dtype=np.float)
@@ -23,7 +41,7 @@ def main():
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.fit_transform(x_test)
 
-    epoch = 1
+    epoch = 10
     topology = [len(x_train[0]), len(x_train[0]), len(x_train[0]), len(y_train[0])]
     my_net = Net(topology)
 
@@ -31,15 +49,14 @@ def main():
     open("Results.txt", "w").close()
 
     for e in range(epoch):
+        saveEpochToFile("Results.txt", e+1)
         for r in range(len(x_train)):
-            input_vals = x_train[r]
-            target_vals = y_train[r]
-            my_net.feedForward(input_vals)
-            # my_net.backProp(target_vals)
-            print("Data row: {}".format(r))
-            saveToFile("Data row: {}\n".format(r))
-            my_net.getResults()
-
+            input_values = x_train[r]
+            target_values = y_train[r]
+            my_net.feedForward(input_values)
+            my_net.backProp(target_values)
+            result_values = my_net.getResults()
+            saveResultsToFile("Results.txt", r, result_values, target_values)
     print()
 
 

@@ -1,6 +1,6 @@
 from random import seed
 from random import random
-from numpy import tanh
+import math
 
 
 class Connection:
@@ -10,12 +10,20 @@ class Connection:
 
 
 class Neuron:
+
+    # Statyczne wartosci uzywane we wstecznej propagacji
+    eta = 0.15
+    alpha = 0.5
+
     def __init__(self, num_outputs, my_index):
         seed(1)
         self.__m_my_index = my_index
         self.__m_output_value = 0
-        # list of connections
+        self.__m_gradient = 0
+
+        # Lista polaczen
         self.__m_output_weights = []
+        # Ustawianie wag polaczen (rowniez dla bias)
         for c in range(num_outputs):
             self.__m_output_weights.append(Connection())
             self.__m_output_weights[c].weight = self.randomWeight()
@@ -24,11 +32,16 @@ class Neuron:
     def randomWeight():
         return random()
 
-    def transferFunction(self, x):
-        return tanh(x)
+    @staticmethod
+    def transferFunction(x):
+        # Funkcja sigmoid
+        return 1 / (1 + math.exp(-x))
 
-    def transferFunctionDerivative(self, x):
-        return 1.0 - x * x
+    @staticmethod
+    def transferFunctionDerivative(x):
+        # Pochodna funkcji sigmoid
+        p = math.exp(-x)
+        return p / (math.pow((1 + p), 2))
 
     def getOutputValue(self):
         return self.__m_output_value
@@ -41,3 +54,34 @@ class Neuron:
         for n in range(len(prev_layer)):
             summ += prev_layer[n].getOutputValue() * prev_layer[n].__m_output_weights[self.__m_my_index].weight
         self.__m_output_value = self.transferFunction(summ)
+
+    def calcOutputGradients(self, target_value):
+        delta = target_value - self.__m_output_value
+        self.__m_gradient = delta * self.transferFunctionDerivative(self.__m_output_value)
+
+    def sumDOW(self, next_layer):
+        summ = 0.0
+
+        # Sumowanie naszych wkladow z errorow w wezlach, ktore nakarmilismy (bez bias, bo jego nie karmilismy)
+        for n in range(len(next_layer) - 1):
+            summ += self.__m_output_weights[n].weight * next_layer[n].__m_gradient
+        return summ
+
+    def calcHiddenGradients(self, next_layer):
+        dow = self.sumDOW(next_layer)
+        self.__m_gradient = dow * self.transferFunctionDerivative(self.__m_output_value)
+
+    def updateInputWeights(self, prev_layer):
+
+        # Wagi, ktore mamy zaktualizowac, znajduja sie w liscie polaczen w neuronach z poprzedniej warstwy (aktualizujemy tez wage bias)
+        print("Nowy neuron\n")
+        for n in range(len(prev_layer)):
+            neuron = prev_layer[n]
+            old_delta_weight = neuron.__m_output_weights[self.__m_my_index].delta_weight
+
+            # Indywidualne wejscie, zalezne od gradientu i wspolczynnika nauczania
+            new_delta_weight = self.eta * neuron.getOutputValue() * self.__m_gradient + self.alpha * old_delta_weight
+            neuron.__m_output_weights[self.__m_my_index].delta_weight = new_delta_weight
+            neuron.__m_output_weights[self.__m_my_index].weight += new_delta_weight
+            print("Waga polaczenia: %.5f" % neuron.__m_output_weights[self.__m_my_index].weight)
+        print("\n\n")
