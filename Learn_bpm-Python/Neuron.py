@@ -1,6 +1,6 @@
 from random import seed
 from random import random
-import math
+from numpy import exp
 
 
 class Connection:
@@ -35,13 +35,13 @@ class Neuron:
     @staticmethod
     def transferFunction(x):
         # Funkcja sigmoid
-        return 1 / (1 + math.exp(-x))
+        return 1 / (1 + exp(-x))
 
     @staticmethod
     def transferFunctionDerivative(x):
         # Pochodna funkcji sigmoid
-        p = math.exp(-x)
-        return p / (math.pow((1 + p), 2))
+        p = exp(-x)
+        return p / (1 + p)**2
 
     def getOutputValue(self):
         return self.__m_output_value
@@ -74,7 +74,6 @@ class Neuron:
     def updateInputWeights(self, prev_layer):
 
         # Wagi, ktore mamy zaktualizowac, znajduja sie w liscie polaczen w neuronach z poprzedniej warstwy (aktualizujemy tez wage bias)
-        print("Nowy neuron\n")
         for n in range(len(prev_layer)):
             neuron = prev_layer[n]
             old_delta_weight = neuron.__m_output_weights[self.__m_my_index].delta_weight
@@ -83,5 +82,4 @@ class Neuron:
             new_delta_weight = self.eta * neuron.getOutputValue() * self.__m_gradient + self.alpha * old_delta_weight
             neuron.__m_output_weights[self.__m_my_index].delta_weight = new_delta_weight
             neuron.__m_output_weights[self.__m_my_index].weight += new_delta_weight
-            print("Waga polaczenia: %.5f" % neuron.__m_output_weights[self.__m_my_index].weight)
-        print("\n\n")
+            print("%.4f" % neuron.__m_output_weights[self.__m_my_index].weight)
