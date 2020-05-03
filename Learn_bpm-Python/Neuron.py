@@ -1,5 +1,4 @@
-from random import seed
-from random import random
+from random import uniform
 from numpy import exp
 
 
@@ -16,7 +15,6 @@ class Neuron:
     alpha = 0.5
 
     def __init__(self, num_outputs, my_index):
-        seed(1)
         self.__m_my_index = my_index
         self.__m_output_value = 0
         self.__m_gradient = 0
@@ -30,7 +28,7 @@ class Neuron:
 
     @staticmethod
     def randomWeight():
-        return random()
+        return uniform(0, 1)
 
     @staticmethod
     def transferFunction(x):
@@ -79,7 +77,7 @@ class Neuron:
             old_delta_weight = neuron.__m_output_weights[self.__m_my_index].delta_weight
 
             # Indywidualne wejscie, zalezne od gradientu i wspolczynnika nauczania
-            new_delta_weight = self.eta * neuron.getOutputValue() * self.__m_gradient + self.alpha * old_delta_weight
+            new_delta_weight = Neuron.eta * neuron.getOutputValue() * self.__m_gradient + Neuron.alpha * old_delta_weight
             neuron.__m_output_weights[self.__m_my_index].delta_weight = new_delta_weight
             neuron.__m_output_weights[self.__m_my_index].weight += new_delta_weight
-            print("%.4f" % neuron.__m_output_weights[self.__m_my_index].weight)
+            # print("%.4f" % neuron.__m_output_weights[self.__m_my_index].weight)

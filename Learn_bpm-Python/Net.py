@@ -5,8 +5,8 @@ from numpy import sqrt
 class Net:
     def __init__(self, topology):
         self.__m_error = 0
-        self.__m_recent_average_error = 0
-        self.__m_recent_average_smoothing_factor = 0
+        # self.__m_recent_average_error = 0
+        # self.__m_recent_average_smoothing_factor = 0
         self.__m_layers = []
         num_layers = len(topology)
         # Utworzenie warstw i neuronow
@@ -34,7 +34,7 @@ class Net:
             for n in range(len(self.__m_layers[layer_num]) - 1):
                 self.__m_layers[layer_num][n].feedForward(prev_layer)
 
-    def backProp(self, target_values):
+    def backProp(self, target_values, rms):
         # Obliczanie calkowitego bledu (RMS) (bez bias)
         output_layer = self.__m_layers[-1]
         self.__m_error = 0.0
@@ -43,9 +43,10 @@ class Net:
             self.__m_error += delta**2
         self.__m_error /= (len(output_layer) - 1)
         self.__m_error = sqrt(self.__m_error)  # RMS
+        rms.append(self.__m_error)
 
         # Implementacja ostatniej sredniej z pomiarow
-        self.__m_recent_average_error = (self.__m_recent_average_error * self.__m_recent_average_smoothing_factor + self.__m_error) / (self.__m_recent_average_smoothing_factor + 1)
+        # self.__m_recent_average_error = (self.__m_recent_average_error * self.__m_recent_average_smoothing_factor + self.__m_error) / (self.__m_recent_average_smoothing_factor + 1)
 
         # Obliczanie gradientu warstwy wyjsciowej (bez bias)
         for n in range(len(output_layer) - 1):

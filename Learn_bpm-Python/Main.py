@@ -37,23 +37,28 @@ def main():
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.fit_transform(x_test)
 
-    epoch = 10
+    epoch = 100
     topology = [len(x_train[0]), len(x_train[0]), len(x_train[0]), len(y_train[0])]
     my_net = Net(topology)
 
     # Wyczyszczenie pliku z danymi
     open("Results.txt", "w").close()
     file = open("Results.txt", "a")
-
+    avg_rms = []
     for e in range(epoch):
         saveEpochToFile(file, e+1)
+        rms = []
         for r in range(len(x_train)):
             input_values = x_train[r]
             target_values = y_train[r]
             my_net.feedForward(input_values)
-            my_net.backProp(target_values)
+            my_net.backProp(target_values, rms)
             result_values = my_net.getResults()
             saveResultsToFile(file, r, result_values, target_values)
+        avg_rms.append(sum(rms)/len(rms))
+        print("Epoch: %d" % (e+1))
+    plt.plot(range(len(avg_rms)), avg_rms)
+    plt.show()
     file.close()
     print()
 
