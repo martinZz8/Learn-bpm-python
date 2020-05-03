@@ -8,14 +8,11 @@ from sklearn.preprocessing import StandardScaler
 from Net import Net
 
 
-def saveEpochToFile(file_name, epoch):
-    file = open(file_name, "a")
+def saveEpochToFile(file, epoch):
     file.write("Epoch: {}\n\n-\t-\t-\t-\t-\t-\n\n".format(epoch))
-    file.close()
 
 
-def saveResultsToFile(file_name, row, result_values, target_values):
-    file = open(file_name, "a")
+def saveResultsToFile(file, row, result_values, target_values):
     file.write("\nData row: {}\n\nOutput:   ".format(row))
     for i in range(len(result_values)):
         if i != (len(result_values) - 1):
@@ -28,7 +25,6 @@ def saveResultsToFile(file_name, row, result_values, target_values):
             file.write("%.5f, " % target_values[i])
         else:
             file.write("%.5f\n" % target_values[i])
-    file.close()
 
 
 def main():
@@ -47,16 +43,18 @@ def main():
 
     # Wyczyszczenie pliku z danymi
     open("Results.txt", "w").close()
+    file = open("Results.txt", "a")
 
     for e in range(epoch):
-        saveEpochToFile("Results.txt", e+1)
+        saveEpochToFile(file, e+1)
         for r in range(len(x_train)):
             input_values = x_train[r]
             target_values = y_train[r]
             my_net.feedForward(input_values)
             my_net.backProp(target_values)
             result_values = my_net.getResults()
-            saveResultsToFile("Results.txt", r, result_values, target_values)
+            saveResultsToFile(file, r, result_values, target_values)
+    file.close()
     print()
 
 
