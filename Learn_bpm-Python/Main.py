@@ -58,8 +58,10 @@ def main():
         avg_rms.append(sum(rms)/len(rms))
         print("Epoch: %d" % (e+1))
     plt.plot(range(len(avg_rms)), avg_rms)
-    plt.show()
     file.close()
+    plt.xlabel("Epoch")
+    plt.ylabel("Avg RMS in epoch")
+    plt.show()
     print()
 
 
