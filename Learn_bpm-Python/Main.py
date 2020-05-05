@@ -37,8 +37,8 @@ def main():
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.fit_transform(x_test)
 
-    epoch = 20
-    topology = [len(x_train[0]), int(len(x_train[0])/2), int(len(x_train[0])/2), len(y_train[0])]
+    epoch = 100
+    topology = [len(x_train[0]), int(len(x_train[0])/2), 3, len(y_train[0])]
     my_net = Net(topology)
 
     # Wyczyszczenie pliku z danymi
