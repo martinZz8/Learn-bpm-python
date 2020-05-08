@@ -125,4 +125,5 @@ dmypy.json
 .pyre/
 
 # Dodatkowe pliki
-Results.txt
+Results_of_train.txt
+Results_of_test.txt
