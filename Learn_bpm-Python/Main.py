@@ -29,11 +29,11 @@ def trainNet(my_net, x_train, y_train, epoch):
         print("Epoch: %d" % (e + 1))
     plt.plot(range(len(avg_rms)), avg_rms)
     file.close()
+    printCurrentPercent(avg_rms, len(y_train[0]), "train net")
     plt.title("Wynik nauki sieci")
     plt.xlabel("Epoch")
     plt.ylabel("Avg RMS in epoch")
     plt.show()
-    print()
 
 
 def testNet(my_net, x_test, y_test, number_of_output_neurons):
@@ -59,6 +59,7 @@ def testNet(my_net, x_test, y_test, number_of_output_neurons):
         rms.append(error)
     plt.plot(range(len(rms)), rms)
     file.close()
+    printCurrentPercent(rms, len(y_test[0]), "test net")
     plt.title("Wynik testow sieci")
     plt.xlabel("Data row")
     plt.ylabel("RMS")
@@ -84,6 +85,12 @@ def saveResultsToFile(file, row, result_values, target_values):
             file.write("%.5f\n" % target_values[i])
 
 
+# Wypisanie procentu jak dobrze uczy sie siec
+def printCurrentPercent(rms, number_of_lln, name):
+    current_percent = (1 - sum(rms) * np.sqrt(number_of_lln)/len(rms))*100
+    print("Current percent of %s: %.2f\n" % (name, current_percent))
+
+
 def main():
     dataset = pd.read_csv("winequality-red.csv", sep=';', decimal=",", dtype=np.float)
     x = dataset.iloc[:, :-1].values
@@ -94,8 +101,8 @@ def main():
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.fit_transform(x_test)
 
-    topology = [len(x_train[0]), int(len(x_train[0])/2), 3, len(y_train[0])]
-    epoch = 500
+    topology = [len(x_train[0]), 8, 6, len(y_train[0])]
+    epoch = 200
     my_net = Net(topology)
     trainNet(my_net, x_train, y_train, epoch)
     testNet(my_net, x_test, y_test, len(y_test[0]))

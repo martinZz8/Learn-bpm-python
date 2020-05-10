@@ -11,7 +11,7 @@ class Connection:
 class Neuron:
 
     # Statyczne wartosci uzywane we wstecznej propagacji
-    eta = 0.01
+    eta = 0.002
     alpha = 0.9
 
     def __init__(self, num_outputs, my_index):
