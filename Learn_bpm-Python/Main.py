@@ -100,7 +100,7 @@ def main():
     scaler = StandardScaler()
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.fit_transform(x_test)
-
+    
     topology = [len(x_train[0]), 8, 6, len(y_train[0])]
     epoch = 200
     my_net = Net(topology)
