@@ -19,6 +19,8 @@ def trainNet(my_net, x_train, y_train, epoch):
         # Zapisuje wyniki ostatnich 10 epok
         if (e > (e - 10)) and (e - 10 >= 0):
             saveEpochToFile(file, e + 1)
+        elif e - 10 < 0:
+            saveEpochToFile(file, e + 1)
         rms = []
         for r in range(len(x_train)):
             input_values = x_train[r]
@@ -27,6 +29,8 @@ def trainNet(my_net, x_train, y_train, epoch):
             my_net.backProp(target_values, rms)
             result_values = my_net.getResults()
             if (e > (e - 10)) and (e - 10 >= 0):
+                saveResultsToFile(file, r, result_values, target_values)
+            elif e - 10 < 0:
                 saveResultsToFile(file, r, result_values, target_values)
         avg_rms.append(sum(rms) / len(rms))
         print("Epoch: %d" % (e + 1))
@@ -111,6 +115,6 @@ def main():
     trainNet(my_net, x_train, y_train, epoch)
     testNet(my_net, x_test, y_test, len(y_test[0]))
     print()
-
+    
 
 main()
