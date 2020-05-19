@@ -16,7 +16,9 @@ def trainNet(my_net, x_train, y_train, epoch):
     file = open("Results_of_train.txt", "a")
     avg_rms = []
     for e in range(epoch):
-        saveEpochToFile(file, e + 1)
+        # Zapisuje wyniki ostatnich 10 epok
+        if (e > (e - 10)) and (e - 10 >= 0):
+            saveEpochToFile(file, e + 1)
         rms = []
         for r in range(len(x_train)):
             input_values = x_train[r]
@@ -24,7 +26,8 @@ def trainNet(my_net, x_train, y_train, epoch):
             my_net.feedForward(input_values)
             my_net.backProp(target_values, rms)
             result_values = my_net.getResults()
-            saveResultsToFile(file, r, result_values, target_values)
+            if (e > (e - 10)) and (e - 10 >= 0):
+                saveResultsToFile(file, r, result_values, target_values)
         avg_rms.append(sum(rms) / len(rms))
         print("Epoch: %d" % (e + 1))
     plt.plot(range(len(avg_rms)), avg_rms)
@@ -49,7 +52,7 @@ def testNet(my_net, x_test, y_test, number_of_output_neurons):
         my_net.feedForward(input_values)
         result_values = my_net.getResults()
         saveResultsToFile(file, r, result_values, target_values)
-        # Self computing RMS
+        # Obliczanie wlasnego RMS
         error = 0
         for i in range(len(result_values)):
             delta = target_values[i] - result_values[i]
