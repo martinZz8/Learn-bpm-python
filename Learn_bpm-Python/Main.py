@@ -109,8 +109,8 @@ def main():
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.fit_transform(x_test)
 
-    topology = [len(x_train[0]), 8, 6, len(y_train[0])]
-    epoch = 200
+    topology = [len(x_train[0]), 25, 20, len(y_train[0])]
+    epoch = 5000
     my_net = Net(topology)
     trainNet(my_net, x_train, y_train, epoch)
     testNet(my_net, x_test, y_test, len(y_test[0]))
