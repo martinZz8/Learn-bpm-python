@@ -110,7 +110,7 @@ def main():
     x_test = scaler.fit_transform(x_test)
 
     topology = [len(x_train[0]), 25, 20, len(y_train[0])]
-    epoch = 5000
+    epoch = 1000
     my_net = Net(topology)
     trainNet(my_net, x_train, y_train, epoch)
     testNet(my_net, x_test, y_test, len(y_test[0]))
